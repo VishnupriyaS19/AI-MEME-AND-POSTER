@@ -8,16 +8,18 @@ import io # For in-memory file handling
 # --- 1. CONFIGURATION ---
 
 # Set your model name (ensure you have the GEMINI_API_KEY set as a secret on Streamlit Cloud)
-MODEL_NAME = 'gemini-2.5-flash' # <-- CORRECTED: Must be flush left
+MODEL_NAME = 'gemini-2.5-flash'
 
-# 1. Define the font filename (Now inside the static folder)
-FONT_FILENAME = "static/Impact.ttf"
+
+# If the font is not found, the script will automatically use the default bitmap font.
+# If you uploaded a font (e.g., 'Impact.ttf'), change the line below.
+# 1. Define the font filename
+FONT_FILENAME = "Impact.ttf"
 
 # 2. Get the absolute path to the font file
 # os.path.dirname(__file__) gets the directory of the current script (app.py)
-script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
-# Path combines the script directory with the new font filename location
-FONT_PATH = str(script_dir / FONT_FILENAME)
+# Path combines this directory with the font filename
+FONT_PATH = str(Path(os.path.dirname(os.path.abspath(__file__))) / FONT_FILENAME)
 
 
 # --- 2. GENERATIVE AI FUNCTION ---
@@ -60,80 +62,50 @@ def generate_caption(topic):
 # --- 3. IMAGE PROCESSING FUNCTION (Meme Creator) ---
 
 def add_caption(image, caption, font_path=FONT_PATH):
-    """Draws the caption onto the bottom of the image, with wrapping and styling."""
-    
-    # Use a copy of the image for drawing
+    """Draws the caption onto the bottom of the image."""
     draw = ImageDraw.Draw(image)
     img_w, img_h = image.size
     
-    # 1. Define Font Size and Path
     # Define font size based on image height for proportionality (e.g., 8% of image height)
-    font_size = int(img_h * 0.08) 
-    
-    # Font loading and fallback logic (Impact.ttf should be in the static folder)
-    font = ImageFont.load_default() # Start with default as a guaranteed fallback
+    font_size = int(img_h * 0.08)
+
+    # Font loading and fallback logic
     try:
-        # Attempt to load the custom font
+        # Attempt to load the custom font with the calculated size
         font = ImageFont.truetype(font_path, font_size)
     except IOError:
-        st.warning(f"Custom font file not found. Using default font.")
-        # If custom font fails, 'font' remains ImageFont.load_default()
+        # Use a default font like one of the system's simple fonts 
+        # (Streamlit Cloud usually has common Linux fonts)
+        font = ImageFont.load_default()
+        
+    # 2. Measure text
+    try:
+        bbox = draw.textbbox((0, 0), caption, font=font)
+        text_w = bbox[2] - bbox[0]
+        text_h = bbox[3] - bbox[1]
+    except Exception:
+        # Fallback for old PIL versions or load_default() incompatibility
+        text_w, text_h = draw.textsize(caption, font=font)
 
-    # 2. Text Wrapping and Formatting
-    
-    # Max width for text: 90% of the image width
-    max_text_width = int(img_w * 0.9)
-    
-    # Function to check text width
-    def get_text_dimensions(text, current_font):
-        try:
-            bbox = draw.textbbox((0, 0), text, font=current_font, spacing=0)
-            return bbox[2] - bbox[0], bbox[3] - bbox[1]
-        except Exception:
-            # Fallback for old PIL versions
-            return draw.textsize(text, font=current_font, spacing=0)
-
-    # Simple word wrapping logic
-    wrapped_lines = []
-    current_line = ""
-    for word in caption.split():
-        test_line = f"{current_line} {word}".strip()
-        test_w, _ = get_text_dimensions(test_line, font)
-
-        if test_w <= max_text_width:
-            current_line = test_line
-        else:
-            wrapped_lines.append(current_line)
-            current_line = word
-    wrapped_lines.append(current_line)
-    
-    final_caption = "\n".join(wrapped_lines)
-    
-    # Recalculate dimensions for the final wrapped text
-    text_w, text_h = get_text_dimensions(final_caption, font)
-    
-    # 3. Position Text (Centered)
-    
-    # Vertical position: 5% padding from the bottom
+    # 3. Position text (centered horizontally, near the bottom)
     x = (img_w - text_w) / 2
     y = img_h - text_h - int(img_h * 0.05) 
     
-    # 4. Draw a Black Stroke (Outline) for Readability
+    # 4. Draw a black stroke (outline) for readability
     stroke_color = "black"
     fill_color = "white"
+    # Proportional stroke width
+    stroke_width = max(1, int(img_h * 0.005))
     
-    # Proportional stroke width based on font size
-    stroke_width = max(1, int(font_size / 20)) 
-    
-    # Draw stroke multiple times for a clear outline
-    for adj_x in range(-stroke_width, stroke_width + 1):
-        for adj_y in range(-stroke_width, stroke_width + 1):
-            if adj_x == 0 and adj_y == 0:
-                continue # Skip the center
-            draw.text((x + adj_x, y + adj_y), final_caption, font=font, fill=stroke_color, align="center")
+    for adj in [-stroke_width, 0, stroke_width]:
+        for adj2 in [-stroke_width, 0, stroke_width]:
+            # Skip the center draw
+            if adj == 0 and adj2 == 0:
+                continue
+            draw.text((x + adj, y + adj2), caption, font=font, fill=stroke_color)
 
-    # 5. Draw the Main Text
-    draw.text((x, y), final_caption, font=font, fill=fill_color, align="center")
+    # 5. Draw the main text
+    draw.text((x, y), caption, font=font, fill=fill_color)
     
     return image
 
@@ -201,9 +173,3 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
-
-
-           
-   
-    
-   
