@@ -58,6 +58,7 @@ def generate_caption(topic):
         # If any other API or network error occurs, return the specific error
         return f"AI Caption Error: Could not connect to Gemini. ({e})"
 
+
 # --- 3. IMAGE PROCESSING FUNCTION (Meme Creator) ---
 
 def add_caption(image, caption, font_path=FONT_PATH):
@@ -66,74 +67,49 @@ def add_caption(image, caption, font_path=FONT_PATH):
     img_w, img_h = image.size
     
     # Define font size based on image height for proportionality (e.g., 8% of image height)
-    # Let's make it a bit larger, maybe 10%
-    font_size = int(img_h * 0.10) 
+    font_size = int(img_h * 0.08)
 
     # Font loading and fallback logic
-    font = ImageFont.load_default() # Start with default as a guaranteed fallback
     try:
         # Attempt to load the custom font with the calculated size
-        # Add a print statement to debug on Streamlit Cloud logs
-        print(f"Attempting to load font from: {font_path}") 
         font = ImageFont.truetype(font_path, font_size)
-        print("Custom font loaded successfully!")
     except IOError:
-        st.warning(f"Custom font file not found at {font_path}. Using default font. "
-                   f"Ensure '{os.path.basename(font_path)}' is in your repo's root.")
-        # If custom font fails, 'font' remains ImageFont.load_default()
-    
+        # Use a default font like one of the system's simple fonts 
+        # (Streamlit Cloud usually has common Linux fonts)
+        font = ImageFont.load_default()
+        
     # 2. Measure text
-    # Pillow's textbbox is the modern way; textsize is deprecated
     try:
-        bbox = draw.textbbox((0, 0), caption, font=font, spacing=0) # Added spacing=0
+        bbox = draw.textbbox((0, 0), caption, font=font)
         text_w = bbox[2] - bbox[0]
         text_h = bbox[3] - bbox[1]
-    except Exception as e:
+    except Exception:
         # Fallback for old PIL versions or load_default() incompatibility
-        st.error(f"Error measuring text: {e}. Using estimated dimensions.")
-        text_w, text_h = draw.textsize(caption, font=font, spacing=0) # Added spacing=0
-
-    # Handle very long captions by potentially reducing font size or wrapping
-    if text_w > img_w * 0.9: # If text is too wide, try to scale down or wrap
-        st.warning("Caption is very long. Attempting to reduce font size for fit.")
-        font_size = int(font_size * (img_w * 0.9 / text_w))
-        try:
-            font = ImageFont.truetype(font_path, font_size)
-        except IOError:
-            font = ImageFont.load_default()
-        
-        try: # Recalculate dimensions with new font size
-            bbox = draw.textbbox((0, 0), caption, font=font, spacing=0)
-            text_w = bbox[2] - bbox[0]
-            text_h = bbox[3] - bbox[1]
-        except Exception:
-            text_w, text_h = draw.textsize(caption, font=font, spacing=0)
-
+        text_w, text_h = draw.textsize(caption, font=font)
 
     # 3. Position text (centered horizontally, near the bottom)
     x = (img_w - text_w) / 2
-    y = img_h - text_h - int(img_h * 0.05) # 5% padding from bottom
+    y = img_h - text_h - int(img_h * 0.05) 
     
     # 4. Draw a black stroke (outline) for readability
     stroke_color = "black"
     fill_color = "white"
-    # Proportional stroke width, adjusted slightly
-    stroke_width = max(1, int(font_size / 20)) 
+    # Proportional stroke width
+    stroke_width = max(1, int(img_h * 0.005))
     
-    # Draw stroke multiple times for a thicker effect
-    for adj_x in range(-stroke_width, stroke_width + 1):
-        for adj_y in range(-stroke_width, stroke_width + 1):
-            if adj_x == 0 and adj_y == 0:
-                continue # Skip the center
-            draw.text((x + adj_x, y + adj_y), caption, font=font, fill=stroke_color)
+    for adj in [-stroke_width, 0, stroke_width]:
+        for adj2 in [-stroke_width, 0, stroke_width]:
+            # Skip the center draw
+            if adj == 0 and adj2 == 0:
+                continue
+            draw.text((x + adj, y + adj2), caption, font=font, fill=stroke_color)
 
     # 5. Draw the main text
     draw.text((x, y), caption, font=font, fill=fill_color)
     
     return image
 
-       
-    
+
 # --- 4. STREAMLIT APPLICATION LAYOUT ---
 
 st.title("🤖 AI Meme & Poster Creator")
@@ -197,4 +173,3 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
-
