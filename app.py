@@ -9,7 +9,7 @@ import io # For in-memory file handling
 # Set your model name (ensure you have the GEMINI_API_KEY set as a secret on Streamlit Cloud)
 MODEL_NAME = 'gemini-2.5-flash'
 
-# IMPORTANT: For deployment, "arial.ttf" is unlikely to be found. 
+
 # If the font is not found, the script will automatically use the default bitmap font.
 # If you uploaded a font (e.g., 'Impact.ttf'), change the line below.
 FONT_PATH = "Impact.ttf"  # or whatever your font file is named
@@ -104,7 +104,7 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Choose an image file", type=['png', 'jpg', 'jpeg'])
 
     st.header("2. Define Topic")
-    topic = st.text_input("Enter a topic (e.g., 'Exam Stress', 'Friday Feeling')", "My Brain After Coding")
+    topic = st.text_input("Enter a topic (e.g., 'Exam Stress', 'Friday Feeling','college life',etc.,)")
     
     st.markdown("---")
     generate_button = st.button("Generate Meme 🎨", type="primary")
@@ -156,4 +156,5 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
 
