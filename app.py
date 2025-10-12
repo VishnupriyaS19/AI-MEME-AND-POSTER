@@ -2,7 +2,6 @@ import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
 from google import genai
 import os
-from pathlib import Path
 import io # For in-memory file handling
 
 # --- 1. CONFIGURATION ---
@@ -202,3 +201,4 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
