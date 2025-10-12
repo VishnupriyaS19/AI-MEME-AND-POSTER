@@ -6,6 +6,7 @@ from pathlib import Path
 import io # For in-memory file handling
 
 # --- 1. CONFIGURATION ---
+    MODEL_NAME = 'gemini-2.5-flash'
 # ... (MODEL_NAME configuration lines) ...
 
 # 1. Define the font filename (Now inside the static folder)
@@ -199,5 +200,6 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
 
 
