@@ -62,50 +62,80 @@ def generate_caption(topic):
 # --- 3. IMAGE PROCESSING FUNCTION (Meme Creator) ---
 
 def add_caption(image, caption, font_path=FONT_PATH):
-    """Draws the caption onto the bottom of the image."""
+    """Draws the caption onto the bottom of the image, with wrapping and styling."""
+    
+    # Use a copy of the image for drawing
     draw = ImageDraw.Draw(image)
     img_w, img_h = image.size
     
+    # 1. Define Font Size and Path
     # Define font size based on image height for proportionality (e.g., 8% of image height)
-    font_size = int(img_h * 0.08)
-
-    # Font loading and fallback logic
+    font_size = int(img_h * 0.08) 
+    
+    # Font loading and fallback logic (Impact.ttf should be in the root)
+    font = ImageFont.load_default() # Start with default as a guaranteed fallback
     try:
-        # Attempt to load the custom font with the calculated size
+        # Attempt to load the custom font
         font = ImageFont.truetype(font_path, font_size)
     except IOError:
-        # Use a default font like one of the system's simple fonts 
-        # (Streamlit Cloud usually has common Linux fonts)
-        font = ImageFont.load_default()
-        
-    # 2. Measure text
-    try:
-        bbox = draw.textbbox((0, 0), caption, font=font)
-        text_w = bbox[2] - bbox[0]
-        text_h = bbox[3] - bbox[1]
-    except Exception:
-        # Fallback for old PIL versions or load_default() incompatibility
-        text_w, text_h = draw.textsize(caption, font=font)
+        st.warning(f"Custom font file not found. Using default font.")
+        # If custom font fails, 'font' remains ImageFont.load_default()
 
-    # 3. Position text (centered horizontally, near the bottom)
+    # 2. Text Wrapping and Formatting
+    
+    # Max width for text: 90% of the image width
+    max_text_width = int(img_w * 0.9)
+    
+    # Function to check text width
+    def get_text_dimensions(text, current_font):
+        try:
+            bbox = draw.textbbox((0, 0), text, font=current_font, spacing=0)
+            return bbox[2] - bbox[0], bbox[3] - bbox[1]
+        except Exception:
+            # Fallback for old PIL versions
+            return draw.textsize(text, font=current_font, spacing=0)
+
+    # Simple word wrapping logic
+    wrapped_lines = []
+    current_line = ""
+    for word in caption.split():
+        test_line = f"{current_line} {word}".strip()
+        test_w, _ = get_text_dimensions(test_line, font)
+
+        if test_w <= max_text_width:
+            current_line = test_line
+        else:
+            wrapped_lines.append(current_line)
+            current_line = word
+    wrapped_lines.append(current_line)
+    
+    final_caption = "\n".join(wrapped_lines)
+    
+    # Recalculate dimensions for the final wrapped text
+    text_w, text_h = get_text_dimensions(final_caption, font)
+    
+    # 3. Position Text (Centered)
+    
+    # Vertical position: 5% padding from the bottom
     x = (img_w - text_w) / 2
     y = img_h - text_h - int(img_h * 0.05) 
     
-    # 4. Draw a black stroke (outline) for readability
+    # 4. Draw a Black Stroke (Outline) for Readability
     stroke_color = "black"
     fill_color = "white"
-    # Proportional stroke width
-    stroke_width = max(1, int(img_h * 0.005))
     
-    for adj in [-stroke_width, 0, stroke_width]:
-        for adj2 in [-stroke_width, 0, stroke_width]:
-            # Skip the center draw
-            if adj == 0 and adj2 == 0:
-                continue
-            draw.text((x + adj, y + adj2), caption, font=font, fill=stroke_color)
+    # Proportional stroke width based on font size
+    stroke_width = max(1, int(font_size / 20)) 
+    
+    # Draw stroke multiple times for a clear outline
+    for adj_x in range(-stroke_width, stroke_width + 1):
+        for adj_y in range(-stroke_width, stroke_width + 1):
+            if adj_x == 0 and adj_y == 0:
+                continue # Skip the center
+            draw.text((x + adj_x, y + adj_y), final_caption, font=font, fill=stroke_color, align="center")
 
-    # 5. Draw the main text
-    draw.text((x, y), caption, font=font, fill=fill_color)
+    # 5. Draw the Main Text
+    draw.text((x, y), final_caption, font=font, fill=fill_color, align="center")
     
     return image
 
@@ -173,3 +203,4 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
