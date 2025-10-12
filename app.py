@@ -12,14 +12,19 @@ FONT_PATH = "arial.ttf"  # Assuming you include this font file, or use system/de
 # --- 2. GENERATIVE AI FUNCTION ---
 
 def generate_caption(topic):
-    # This checks Streamlit's secrets dictionary directly
+    """Generates a caption using the Gemini API."""
+    
+    # 1. EXPLICITLY CHECK FOR THE API KEY IN STREAMLIT SECRETS
     if "GEMINI_API_KEY" not in st.secrets:
-        return "AI Caption Error: Key not found in st.secrets. Check your .streamlit/secrets.toml file."
+        return "AI Caption Error: 'GEMINI_API_KEY' not found in Streamlit secrets. Please check your .streamlit/secrets.toml file."
     
     try:
-        # Use the key explicitly for more robust connection:
-        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"]) 
+        # 2. INITIALIZE CLIENT AND MODEL
+        # Pass the key explicitly for the most robust connection:
+        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
         
+        # This is where the 'model' variable is correctly defined and assigned
+        model = client.models.get(model_name=MODEL_NAME) 
         
         prompt = (
             f"Generate a single, short, funny, and relatable meme caption "
@@ -27,17 +32,18 @@ def generate_caption(topic):
             f"Only return the caption text, nothing else."
         )
         
+        # 3. USE THE MODEL
         response = model.generate_content(prompt)
         
-        # Clean the output (AI models sometimes add quotes or notes)
+        # Clean the output 
         caption = response.text.strip().replace('"', '')
         
         # Extract only the first line/suggestion if the model gives multiple
         return caption.split('\n')[0].strip()
         
     except Exception as e:
+        # If any other API or network error occurs, return the specific error
         return f"AI Caption Error: Could not connect to Gemini. ({e})"
-
 
 # --- 3. IMAGE PROCESSING FUNCTION (Meme Creator) ---
 
@@ -144,3 +150,4 @@ if uploaded_file:
 else:
 
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
