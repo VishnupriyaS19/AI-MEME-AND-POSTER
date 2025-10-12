@@ -6,11 +6,12 @@ from pathlib import Path
 import io # For in-memory file handling
 
 # --- 1. CONFIGURATION ---
-    MODEL_NAME = 'gemini-2.5-flash'
-# ... (MODEL_NAME configuration lines) ...
+
+# Set your model name (ensure you have the GEMINI_API_KEY set as a secret on Streamlit Cloud)
+MODEL_NAME = 'gemini-2.5-flash' # <-- CORRECTED: Must be flush left
 
 # 1. Define the font filename (Now inside the static folder)
-FONT_FILENAME = "static/Impact.ttf"  
+FONT_FILENAME = "static/Impact.ttf"
 
 # 2. Get the absolute path to the font file
 # os.path.dirname(__file__) gets the directory of the current script (app.py)
@@ -69,7 +70,7 @@ def add_caption(image, caption, font_path=FONT_PATH):
     # Define font size based on image height for proportionality (e.g., 8% of image height)
     font_size = int(img_h * 0.08) 
     
-    # Font loading and fallback logic (Impact.ttf should be in the root)
+    # Font loading and fallback logic (Impact.ttf should be in the static folder)
     font = ImageFont.load_default() # Start with default as a guaranteed fallback
     try:
         # Attempt to load the custom font
@@ -200,6 +201,3 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
-
-
-
