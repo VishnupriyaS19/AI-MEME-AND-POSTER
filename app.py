@@ -12,11 +12,14 @@ FONT_PATH = "arial.ttf"  # Assuming you include this font file, or use system/de
 # --- 2. GENERATIVE AI FUNCTION ---
 
 def generate_caption(topic):
-    """Generates a caption using the Gemini API."""
+    # This checks Streamlit's secrets dictionary directly
+    if "GEMINI_API_KEY" not in st.secrets:
+        return "AI Caption Error: Key not found in st.secrets. Check your .streamlit/secrets.toml file."
+    
     try:
-        # The API key is automatically picked up if set as a secret
-        client = genai.Client()
-        model = client.models.get(model_name=MODEL_NAME)
+        # Use the key explicitly for more robust connection:
+        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"]) 
+        
         
         prompt = (
             f"Generate a single, short, funny, and relatable meme caption "
@@ -139,4 +142,5 @@ if uploaded_file:
             st.error(caption_text) # Display the error if AI failed
 
 else:
+
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
