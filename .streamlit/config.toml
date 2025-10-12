@@ -1,0 +1,8 @@
+[server]
+enableStaticServing = true 
+
+[[theme.fontFaces]]
+family = "ImpactMeme" 
+url = "app/static/Impact.ttf"
+style = "normal"
+weight = 400
