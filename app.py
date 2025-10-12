@@ -12,7 +12,7 @@ MODEL_NAME = 'gemini-2.5-flash'
 # IMPORTANT: For deployment, "arial.ttf" is unlikely to be found. 
 # If the font is not found, the script will automatically use the default bitmap font.
 # If you uploaded a font (e.g., 'Impact.ttf'), change the line below.
-FONT_PATH = "arial.ttf"
+FONT_PATH = "Impact.ttf"  # or whatever your font file is named
 
 # --- 2. GENERATIVE AI FUNCTION (FIXED) ---
 
@@ -156,3 +156,4 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
