@@ -2,14 +2,19 @@ import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
 from google import genai
 import os
+import io # For in-memory file handling
 
 # --- 1. CONFIGURATION ---
 
 # Set your model name (ensure you have the GEMINI_API_KEY set as a secret on Streamlit Cloud)
 MODEL_NAME = 'gemini-2.5-flash'
-FONT_PATH = "arial.ttf"  # Assuming you include this font file, or use system/default
 
-# --- 2. GENERATIVE AI FUNCTION ---
+# IMPORTANT: For deployment, "arial.ttf" is unlikely to be found. 
+# If the font is not found, the script will automatically use the default bitmap font.
+# If you uploaded a font (e.g., 'Impact.ttf'), change the line below.
+FONT_PATH = "arial.ttf"
+
+# --- 2. GENERATIVE AI FUNCTION (FIXED) ---
 
 def generate_caption(topic):
     """Generates a caption using the Gemini API."""
@@ -19,12 +24,9 @@ def generate_caption(topic):
         return "AI Caption Error: 'GEMINI_API_KEY' not found in Streamlit secrets. Please check your .streamlit/secrets.toml file."
     
     try:
-        # 2. INITIALIZE CLIENT AND MODEL
+        # 2. INITIALIZE CLIENT
         # Pass the key explicitly for the most robust connection:
         client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-        
-        # This is where the 'model' variable is correctly defined and assigned
-        model = client.models.get(model_name=MODEL_NAME) 
         
         prompt = (
             f"Generate a single, short, funny, and relatable meme caption "
@@ -32,8 +34,11 @@ def generate_caption(topic):
             f"Only return the caption text, nothing else."
         )
         
-        # 3. USE THE MODEL
-        response = model.generate_content(prompt)
+        # 3. USE THE CORRECT GENERATION CALL (Fixes the 'unexpected keyword' error)
+        response = client.models.generate_content(
+            model=MODEL_NAME, 
+            contents=prompt
+        )
         
         # Clean the output 
         caption = response.text.strip().replace('"', '')
@@ -44,6 +49,7 @@ def generate_caption(topic):
     except Exception as e:
         # If any other API or network error occurs, return the specific error
         return f"AI Caption Error: Could not connect to Gemini. ({e})"
+
 
 # --- 3. IMAGE PROCESSING FUNCTION (Meme Creator) ---
 
@@ -60,15 +66,13 @@ def add_caption(image, caption, font_path=FONT_PATH):
         st.warning(f"Font file not found at {font_path}. Using default font.")
         font = ImageFont.load_default()
         
-    # 2. Measure text using the modern method: textbbox()
-    # (0, 0) is a dummy origin for size calculation
+    # 2. Measure text
     bbox = draw.textbbox((0, 0), caption, font=font)
     text_w = bbox[2] - bbox[0]
     text_h = bbox[3] - bbox[1]
 
     # 3. Position text (centered horizontally, near the bottom)
     x = (img_w - text_w) / 2
-    # Add a slight border/padding from the bottom edge
     y = img_h - text_h - int(img_h * 0.05) 
 
     # 4. Draw a black stroke (outline) for readability
@@ -78,7 +82,7 @@ def add_caption(image, caption, font_path=FONT_PATH):
     
     for adj in [-stroke_width, 0, stroke_width]:
         for adj2 in [-stroke_width, 0, stroke_width]:
-            # Skip the center draw to avoid overdrawing the main text
+            # Skip the center draw
             if adj == 0 and adj2 == 0:
                 continue
             draw.text((x + adj, y + adj2), caption, font=font, fill=stroke_color)
@@ -107,10 +111,9 @@ with st.sidebar:
 
 # --- MAIN EXECUTION ---
 
-# Ensure the 'image' variable is defined before it's used
 if uploaded_file:
-    # Load the image from the uploader
-    base_image = Image.open(uploaded_file).convert("RGB")
+    # Load the image from the uploader using in-memory file handling
+    base_image = Image.open(io.BytesIO(uploaded_file.read())).convert("RGB")
     
     # Display the image preview
     col1, col2 = st.columns(2)
@@ -128,6 +131,7 @@ if uploaded_file:
         # B. Process the image
         if not caption_text.startswith("AI Caption Error"):
             with st.spinner("Adding caption to image..."):
+                # Use a fresh copy of the image for drawing
                 meme_image = add_caption(base_image.copy(), caption_text)
             
             # C. Display the result
@@ -135,19 +139,20 @@ if uploaded_file:
                 st.subheader("Generated Meme")
                 st.image(meme_image, caption="AI-Generated Meme", use_column_width=True)
 
-            # D. Download button
-            meme_image.save("final_meme.png")
-            with open("final_meme.png", "rb") as file:
-                st.download_button(
-                    label="Download Meme",
-                    data=file,
-                    file_name="ai_generated_meme.png",
-                    mime="image/png"
-                )
+            # D. Download button - Uses in-memory BytesIO
+            buffer = io.BytesIO()
+            meme_image.save(buffer, format="PNG")
+            buffer.seek(0)
+            
+            st.download_button(
+                label="Download Meme",
+                data=buffer,
+                file_name="ai_generated_meme.png",
+                mime="image/png"
+            )
         else:
-            st.error(caption_text) # Display the error if AI failed
+            # Display the error if AI failed
+            st.error(caption_text) 
 
 else:
-
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
-
