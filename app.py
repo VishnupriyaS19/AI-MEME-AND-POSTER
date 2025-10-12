@@ -8,14 +8,18 @@ import io # For in-memory file handling
 # --- 1. CONFIGURATION ---
 
 # Set your model name (ensure you have the GEMINI_API_KEY set as a secret on Streamlit Cloud)
-MODEL_NAME = 'gemini-2.5-flash' 
+MODEL_NAME = 'gemini-2.5-flash' # <-- CORRECTED: Must be flush left
 
-# 1. Define the font filename (assuming it's in the root folder with app.py)
-FONT_FILENAME = "Impact.ttf" 
+# 1. Define the font filename (Now inside the static folder)
+FONT_FILENAME = "static/Impact.ttf"
 
-# 2. Get the absolute path to the font file using os.path.join for reliability
-# os.path.dirname(os.path.abspath(__file__)) gets the directory where app.py lives
-FONT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
+# 2. Get the absolute path to the font file
+# os.path.dirname(__file__) gets the directory of the current script (app.py)
+script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+# Path combines the script directory with the new font filename location
+FONT_PATH = str(script_dir / FONT_FILENAME)
+
+
 # --- 2. GENERATIVE AI FUNCTION ---
 
 def generate_caption(topic):
@@ -199,3 +203,7 @@ else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
 
 
+           
+   
+    
+   
