@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
 from google import genai
 import os
+from pathlib import Path 
 import io # For in-memory file handling
 
 # --- 1. CONFIGURATION ---
@@ -12,7 +13,14 @@ MODEL_NAME = 'gemini-2.5-flash'
 
 # If the font is not found, the script will automatically use the default bitmap font.
 # If you uploaded a font (e.g., 'Impact.ttf'), change the line below.
-FONT_PATH = "Impact.ttf"  # or whatever your font file is named
+# 1. Define the font filename
+FONT_FILENAME = "Impact.ttf" 
+
+# 2. Get the absolute path to the font file
+# os.path.dirname(__file__) gets the directory of the current script (app.py)
+# Path combines this directory with the font filename
+FONT_PATH = str(Path(os.path.dirname(os.path.abspath(__file__))) / FONT_FILENAME)
+
 
 # --- 2. GENERATIVE AI FUNCTION (FIXED) ---
 
@@ -58,14 +66,15 @@ def add_caption(image, caption, font_path=FONT_PATH):
     draw = ImageDraw.Draw(image)
     img_w, img_h = image.size
     
-    # 1. Load Font or use default
-    font_size = int(img_h / 15)  # Dynamic font size based on image height
-    try:
-        font = ImageFont.truetype(font_path, size=font_size)
-    except IOError:
-        st.warning(f"Font file not found at {font_path}. Using default font.")
-        font = ImageFont.load_default()
-        
+    font = ImageFont.truetype(FONT_PATH, font_size) 
+
+# You may also want a fallback in case the font still isn't found
+try:
+    font = ImageFont.truetype(FONT_PATH, font_size)
+except IOError:
+    # Use a default font like one of the system's simple fonts 
+    # (Streamlit Cloud usually has common Linux fonts)
+    font = ImageFont.load_default()
     # 2. Measure text
     bbox = draw.textbbox((0, 0), caption, font=font)
     text_w = bbox[2] - bbox[0]
@@ -156,5 +165,6 @@ if uploaded_file:
 
 else:
     st.info("Please upload an image and enter a topic in the sidebar to begin.")
+
 
 
