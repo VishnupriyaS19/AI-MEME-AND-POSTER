@@ -27,15 +27,8 @@ Hosting - Streamlit Cloud
 
 ---
 
-## 📂 Project Structure
-
-ai-meme-generator/
-├── app.py # Main Streamlit app
-├── requirements.txt # Dependencies list
-└── .streamlit/
-└── secrets.toml # Stores API key securely
-
 🚀 Installation & Setup
+
 1️⃣  Clone the Repository
    
    Bash
@@ -51,9 +44,7 @@ pip install -r requirements.txt
 
 GEMINI_API_KEY="YOUR_API_KEY_HERE"
 
-Streamlit Cloud Deployment: Create a directory named .streamlit and a file inside it named secrets.toml. Add your key as follows:
-# .streamlit/secrets.toml
-GEMINI_API_KEY="YOUR_API_KEY_HERE"
+Streamlit Cloud Deployment: Create a directory named .streamlit and a file inside it named secrets.toml.
 
 ▶️ How to Run the App
 
@@ -61,6 +52,7 @@ streamlit run app.py
 The app will open in your default web browser
 
 👨‍💻 How to Use
+
 Upload Image: Use the file uploader in the sidebar to select a base image.
 
 Enter Topic: Type a topic (e.g., "Mondays," "When the code finally runs") into the text box.
@@ -72,6 +64,7 @@ The application will call the Gemini API, display the generated caption, and ren
 Click the "Download Meme" button to save the result.
 
 🧠 Example Output
+
 Topic: Exam Stress
 
 Image: Student holding books
