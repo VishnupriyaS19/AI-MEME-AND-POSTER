@@ -47,7 +47,7 @@ pip install -r requirements.txt
 
 3️⃣ Configure the API Key
 
-GEMINI_API_KEY="YOUR_API_KEY_HERE"
+GEMINI_API_KEY="AIzaSyChgILNWbwq2G1UzRUMkggGJmO5sQ_apmo"
 
 Streamlit Cloud Deployment: Create a directory named .streamlit and a file inside it named secrets.toml.
 
