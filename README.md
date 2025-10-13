@@ -83,9 +83,14 @@ AI Generated Meme:
 
 ---
 
-Build for Streamlit Community Cloud
+🔑 Built for Streamlit Community Cloud and Gemini
 
 ![image alt](https://github.com/VishnupriyaS19/AI-MEME-AND-POSTER/blob/2ad61f37b06acfa41195b5d0753705d07289744b/AIMEME%20AND%20POSTER.jpg)
 
+---
+
+Demo
+
+https://ai-meme-and-poster-bb7tr4yydkbyerstain5bv.streamlit.app/ -[LIVE DEPLOYMENT LINK]
 
 
