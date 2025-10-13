@@ -54,6 +54,7 @@ GEMINI_API_KEY="YOUR_API_KEY_HERE"
 Streamlit Cloud Deployment: Create a directory named .streamlit and a file inside it named secrets.toml. Add your key as follows:
 # .streamlit/secrets.toml
 GEMINI_API_KEY="YOUR_API_KEY_HERE"
+
 ▶️ How to Run the App
 
 streamlit run app.py
@@ -69,16 +70,13 @@ Generate Meme: Click the "Generate Meme 🎨" button.
 The application will call the Gemini API, display the generated caption, and render the final meme image.
 
 Click the "Download Meme" button to save the result.
+
 🧠 Example Output
-
-Input:
-
 Topic: Exam Stress
 
 Image: Student holding books
 
 AI Generated Meme:
-
 "When you study all night and still forget your name on the exam!"
 
 
