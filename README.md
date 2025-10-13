@@ -51,6 +51,8 @@ Streamlit Cloud Deployment: Create a directory named .streamlit and a file insid
 streamlit run app.py
 The app will open in your default web browser
 
+---
+
 👨‍💻 How to Use
 
 Upload Image: Use the file uploader in the sidebar to select a base image.
@@ -63,6 +65,8 @@ The application will call the Gemini API, display the generated caption, and ren
 
 Click the "Download Meme" button to save the result.
 
+---
+
 🧠 Example Output
 
 Topic: Exam Stress
@@ -72,6 +76,7 @@ Image: Student holding books
 AI Generated Meme:
 "When you study all night and still forget your name on the exam!"
 
+---
 
 
 
