@@ -60,25 +60,25 @@ The app will open in your default web browser
 
 ## 👨‍💻 How to Use
 
-Upload Image: Use the file uploader in the sidebar to select a base image.
+**Upload Image:** Use the file uploader in the sidebar to select a base image.
 
-Enter Topic: Type a topic (e.g., "Mondays," "When the code finally runs") into the text box.
+**Enter Topic:** Type a topic (e.g., "Mondays," "When the code finally runs") into the text box.
 
-Generate Meme: Click the "Generate Meme 🎨" button.
+**Generate Meme:** Click the **"Generate Meme 🎨"** button.
 
 The application will call the Gemini API, display the generated caption, and render the final meme image.
 
-Click the "Download Meme" button to save the result.
+Click the **"Download Meme"** button to save the result.
 
 ---
 
 ## 🧠 Example Output
 
-Topic: Exam Stress
+**Topic:** Exam Stress
 
-Image: Student holding books
+**Image:** Student holding books
 
-AI Generated Meme:
+**AI Generated Meme:**
 "When you study all night and still forget your name on the exam!"
 
 ---
@@ -103,16 +103,16 @@ This project can be expanded and improved in several exciting ways:
 1. **AI Caption Style Selection:**  
    Allow users to choose between funny, motivational, sarcastic, or inspirational meme styles.
 
-2. Auto Image Suggestions: 
+2. **Auto Image Suggestions:** 
    Integrate an AI image generator (like Imagen or DALL·E) to automatically create meme backgrounds.
 
-3. Multi-Language Support:  
+3. **Multi-Language Support:**  
    Enable meme generation in regional languages such as Hindi, Tamil, or Telugu.
 
-4. Meme Templates Library:  
+4. **Meme Templates Library:**  
    Add a collection of popular meme templates for quick selection and automatic caption placement.
 
-5. Cloud Storage Integration:  
+5. **Cloud Storage Integration:**  
    Store generated memes in AWS
 
 
