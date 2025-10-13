@@ -36,12 +36,14 @@ Hosting - Streamlit Cloud
 1️⃣  Clone the Repository
    
    Bash
+   
    git clone <your-repo-url>
    cd ai-meme-and-poster
 
 2️⃣ Set up the Environment
 
 Bash
+
 pip install -r requirements.txt
 
 3️⃣ Configure the API Key
