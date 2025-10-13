@@ -30,7 +30,7 @@ Hosting - Streamlit Cloud
 
 ---
 
-🚀 Installation & Setup
+## 🚀 Installation & Setup
 
 1️⃣  Clone the Repository
    
@@ -58,7 +58,7 @@ The app will open in your default web browser
 
 ---
 
-👨‍💻 How to Use
+## 👨‍💻 How to Use
 
 Upload Image: Use the file uploader in the sidebar to select a base image.
 
@@ -72,7 +72,7 @@ Click the "Download Meme" button to save the result.
 
 ---
 
-🧠 Example Output
+## 🧠 Example Output
 
 Topic: Exam Stress
 
@@ -83,13 +83,13 @@ AI Generated Meme:
 
 ---
 
-🔑 Built for Streamlit Community Cloud and Gemini
+## 🔑 Built for Streamlit Community Cloud and Gemini
 
 ![image alt](https://github.com/VishnupriyaS19/AI-MEME-AND-POSTER/blob/2ad61f37b06acfa41195b5d0753705d07289744b/AIMEME%20AND%20POSTER.jpg)
 
 ---
 
-🎥Demo
+## 🎥 Demo
 
 🔗https://ai-meme-and-poster-bb7tr4yydkbyerstain5bv.streamlit.app/ -[LIVE DEPLOYMENT LINK]
 
@@ -100,7 +100,7 @@ AI Generated Meme:
 
 This project can be expanded and improved in several exciting ways:
 
-1. AI Caption Style Selection:  
+1. **AI Caption Style Selection:**  
    Allow users to choose between funny, motivational, sarcastic, or inspirational meme styles.
 
 2. Auto Image Suggestions: 
