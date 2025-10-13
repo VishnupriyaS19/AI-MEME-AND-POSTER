@@ -89,8 +89,31 @@ AI Generated Meme:
 
 ---
 
-Demo
+🎥Demo
 
-https://ai-meme-and-poster-bb7tr4yydkbyerstain5bv.streamlit.app/ -[LIVE DEPLOYMENT LINK]
+🔗https://ai-meme-and-poster-bb7tr4yydkbyerstain5bv.streamlit.app/ -[LIVE DEPLOYMENT LINK]
+
+
+---
+
+## 🔮 Future Scope
+
+This project can be expanded and improved in several exciting ways:
+
+1. AI Caption Style Selection:  
+   Allow users to choose between funny, motivational, sarcastic, or inspirational meme styles.
+
+2. Auto Image Suggestions: 
+   Integrate an AI image generator (like Imagen or DALL·E) to automatically create meme backgrounds.
+
+3. Multi-Language Support:  
+   Enable meme generation in regional languages such as Hindi, Tamil, or Telugu.
+
+4. Meme Templates Library:  
+   Add a collection of popular meme templates for quick selection and automatic caption placement.
+
+5. Cloud Storage Integration:  
+   Store generated memes in AWS
+
 
 
