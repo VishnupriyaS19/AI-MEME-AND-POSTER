@@ -1,7 +1,6 @@
-# AI-MEME-AND-POSTER
-AI Meme & Poster Creator Using Streamlit and Gemini
-
 # 😂 AI Meme & Poster Creator
+
+AI Meme & Poster Creator Using Streamlit and Gemini
 
 An AI-powered web app that automatically generates  funny memes or posters from any image and topic using Google Gemini AI and Streamlit.  
 This project helps students and creators easily design memes without needing design or coding skills!
