@@ -20,9 +20,13 @@ This project helps students and creators easily design memes without needing des
 ## 🧩 Tech Stack
 
 Frontend - Streamlit 
-Backend AI Model - Google Gemini 2.5 Flash 
-Image Editing - Python PIL (Pillow) 
-Language - Python 3 
+
+Backend AI Model - Google Gemini 2.5 Flash
+
+Image Editing - Python PIL (Pillow)
+
+Language - Python 3
+
 Hosting - Streamlit Cloud 
 
 ---
